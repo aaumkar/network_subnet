@@ -23,7 +23,7 @@ typedef enum {
 typedef enum {
     ViewIdMenu,
     // ViewIdIpInput,
-    // ViewIdResult,
+    ViewIdResult,
     // ViewIdMaskList,
 } ViewId;
 
@@ -41,10 +41,10 @@ typedef struct {
 
     Submenu* submenu;
     // View* ip_input;
-    // View* result;
+    View* result_view;
     // View* mask_list;
 
     // uint8_t ip[4];
     // uint8_t cidr;
-    // SubnetResult subnet_result;
+    SubnetResult subnet_result;
 } NetworkSubnetApp;

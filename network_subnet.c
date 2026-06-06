@@ -4,6 +4,8 @@
 
 #include "network_subnet.h"
 #include "scenes/scenes.h"
+#include "views/result_view.h"
+#include "core/subnet_math.h"
 
 #define TAG "--NetworkSubnet--"
 
@@ -31,6 +33,10 @@ NetworkSubnetApp* allocate_and_init() {
     FURI_LOG_I(TAG, "View Dispatcher allocated");
     app->submenu = submenu_alloc();
     FURI_LOG_I(TAG, "Submenu Allocated");
+    app->result_view = result_view_alloc();
+
+    // register it with the dispatcher (also at app start)
+    view_dispatcher_add_view(app->view_dispatcher, ViewIdResult, app->result_view);
 
     // prepare
     Gui* gui = furi_record_open(RECORD_GUI);
@@ -55,9 +61,13 @@ void clean_and_free(NetworkSubnetApp* app) {
 
     FURI_LOG_I(TAG, "Starting Freeing the memory");
     view_dispatcher_remove_view(app->view_dispatcher, ViewIdMenu);
-    FURI_LOG_I(TAG, "view removed");
+    FURI_LOG_I(TAG, "menu view removed");
+    view_dispatcher_remove_view(app->view_dispatcher, ViewIdResult);
+    FURI_LOG_I(TAG, "result view removed");
     submenu_free(app->submenu);
     FURI_LOG_I(TAG, "Submenu freed");
+    result_view_free(app->result_view);
+    FURI_LOG_I(TAG, "Result view freed");
     view_dispatcher_free(app->view_dispatcher);
     FURI_LOG_I(TAG, "vd freed");
     scene_manager_free(app->scene_manager);
@@ -71,7 +81,17 @@ void clean_and_free(NetworkSubnetApp* app) {
 int32_t network_subnet_app(void* p) {
     UNUSED(p);
     NetworkSubnetApp* app = allocate_and_init();
+
     // start
+    uint8_t ip[] = {172, 20, 20, 1};
+    uint8_t cidr = 23;
+    app->subnet_result.cidr = cidr;
+    subnet_calculate(
+        ip,
+        cidr,
+        &app->subnet_result.network_addr,
+        &app->subnet_result.broadcast_addr,
+        &app->subnet_result.host_count);
     FURI_LOG_I(TAG, "Setting next scene");
     scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneSubMenu);
     FURI_LOG_I(TAG, "Starting VD");

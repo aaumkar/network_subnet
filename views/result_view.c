@@ -1,0 +1,57 @@
+// views/result_view.c
+#include <gui/view.h>
+#include <gui/gui.h>
+#include <gui/elements.h>
+
+#include "result_view.h"
+#include "../network_subnet.h"
+
+// 1. The draw callback — called by the GUI thread, never by you
+static void result_view_draw(Canvas* canvas, void* model) {
+    ResultViewModel* m = (ResultViewModel*)model;
+
+    canvas_clear(canvas);
+    canvas_set_font(canvas, FontPrimary);
+    canvas_draw_str(canvas, 2, 10, "Network Info");
+
+    canvas_set_font(canvas, FontSecondary);
+
+    char buf[26];
+    snprintf(buf, sizeof(buf), "Net: %s/%u", m->network, m->cidr);
+    canvas_draw_str(canvas, 2, 24, buf);
+
+    snprintf(buf, sizeof(buf), "Cast: %s", m->broadcast);
+    canvas_draw_str(canvas, 2, 34, buf);
+
+    snprintf(buf, sizeof(buf), "Hosts: %lu", (unsigned long)m->host_count);
+    canvas_draw_str(canvas, 2, 44, buf);
+
+    //elements_button_left(canvas, "Back");
+}
+
+// 2. The input callback — called by the GUI thread on key events
+static bool result_view_input(InputEvent* event, void* context) {
+    UNUSED(event);
+    UNUSED(context);
+    return false; // let BACK propagate to the nav callback
+}
+
+// 3. Alloc — called once at app startup, wires everything together
+View* result_view_alloc(void) {
+    View* view = view_alloc();
+
+    // Register the draw callback
+    view_set_draw_callback(view, result_view_draw);
+
+    // Register the input callback
+    view_set_input_callback(view, result_view_input);
+
+    // Allocate the model that lives inside this view
+    view_allocate_model(view, ViewModelTypeLockFree, sizeof(ResultViewModel));
+
+    return view;
+}
+
+void result_view_free(View* view) {
+    view_free(view);
+}

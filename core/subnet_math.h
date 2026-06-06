@@ -57,7 +57,6 @@ void subnet_calculate(
     uint32_t ip_number = ip_to_u32(ip);
     *out_network = mask & ip_number;
 
-    *out_host_count = *out_broadcast - ip_number;
     switch(cidr) {
     case 31:
         *out_broadcast = *out_network + 1;
@@ -71,4 +70,5 @@ void subnet_calculate(
         *out_broadcast = ip_number | (~mask);
         *out_host_count = *out_host_count - 1;
     }
+    *out_host_count = *out_broadcast - ip_number;
 }

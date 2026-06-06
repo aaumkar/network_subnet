@@ -1,4 +1,5 @@
 #include "network_subnet.h"
+#include "scenes/scenes.h"
 
 void network_subnet_submenu_set_callback(void* context, uint32_t index) {
     furi_assert(context);
@@ -33,7 +34,8 @@ bool network_subnet_scene_menu_on_event(void* context, SceneManagerEvent event) 
     case SceneManagerEventTypeCustom:
         switch(event.event) {
         case EventMenuIpSelected:
-            consumed = false;
+            consumed = true;
+            scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneResult);
             break;
         case EventMenuMaskSelected:
             consumed = false;
