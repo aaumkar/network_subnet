@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <furi.h>
 
 /**
  * @brief get uint32 version of the IP address 
@@ -56,7 +57,7 @@ void subnet_calculate(
     uint32_t mask = cidr_to_mask(cidr);
     uint32_t ip_number = ip_to_u32(ip);
     *out_network = mask & ip_number;
-
+    FURI_LOG_D("subnet_calc", "recieved ip %d.%d.%d.%d/%d", ip[0], ip[1], ip[2], ip[3], cidr);
     switch(cidr) {
     case 31:
         *out_broadcast = *out_network + 1;

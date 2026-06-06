@@ -6,6 +6,8 @@
 #include <gui/modules/submenu.h>
 #include <gui/view.h>
 
+#define TAG "--NetworkSubnet--"
+
 typedef struct {
     uint32_t network_addr; // first address  (host bits zeroed)
     uint32_t broadcast_addr; // last address
@@ -13,7 +15,6 @@ typedef struct {
     uint8_t cidr; // prefix length
 } SubnetResult;
 
-// ── Input mode chosen on menu ─────────────────────────────
 typedef enum {
     InputModeIpSubnet,
     InputModeMask
@@ -22,7 +23,7 @@ typedef enum {
 // View IDs — registered with ViewDispatcher
 typedef enum {
     ViewIdMenu,
-    // ViewIdIpInput,
+    ViewIdIpInput,
     ViewIdResult,
     // ViewIdMaskList,
 } ViewId;
@@ -31,7 +32,7 @@ typedef enum {
 typedef enum {
     EventMenuIpSelected,
     EventMenuMaskSelected,
-    // EventIpConfirmed,
+    EventIpConfirmed,
     // EventBackFromResult,
 } AppEvent;
 
@@ -40,11 +41,12 @@ typedef struct {
     ViewDispatcher* view_dispatcher;
 
     Submenu* submenu;
-    // View* ip_input;
     View* result_view;
+    View* ip_input_view;
     // View* mask_list;
 
-    // uint8_t ip[4];
-    // uint8_t cidr;
+    uint8_t ip[4];
+    uint8_t cidr;
+    uint8_t active_digit;
     SubnetResult subnet_result;
 } NetworkSubnetApp;

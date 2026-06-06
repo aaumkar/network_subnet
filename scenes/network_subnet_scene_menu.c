@@ -21,7 +21,11 @@ void network_subnet_scene_menu_on_enter(void* context) {
     submenu_add_item(
         app->submenu, "IP / CIDR", InputModeIpSubnet, network_subnet_submenu_set_callback, app);
     submenu_add_item(
-        app->submenu, "Mask", InputModeMask, network_subnet_submenu_set_callback, app);
+        app->submenu,
+        "[temp] ip view input",
+        InputModeMask,
+        network_subnet_submenu_set_callback,
+        app);
     view_dispatcher_switch_to_view(app->view_dispatcher, ViewIdMenu);
 }
 
@@ -38,7 +42,10 @@ bool network_subnet_scene_menu_on_event(void* context, SceneManagerEvent event) 
             scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneResult);
             break;
         case EventMenuMaskSelected:
-            consumed = false;
+            FURI_LOG_D(
+                TAG, "Menu mask selected and now setting next scene to NetworkSubnetSceenIpInput");
+            scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneIpInput);
+            consumed = true;
             break;
         }
         break;

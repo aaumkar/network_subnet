@@ -1,14 +1,21 @@
 #include "network_subnet.h"
 #include "../views/result_view.h"
+#include "../core/subnet_math.h"
 
 void network_subnet_scene_result_on_enter(void* context) {
     furi_assert(context);
     NetworkSubnetApp* app = context;
+    app->subnet_result.cidr = app->cidr;
+    subnet_calculate(
+        app->ip,
+        app->cidr,
+        &app->subnet_result.network_addr,
+        &app->subnet_result.broadcast_addr,
+        &app->subnet_result.host_count);
     with_view_model(
         app->result_view,
         ResultViewModel * m,
         {
-            // format from raw app state into display strings
             snprintf(
                 m->network,
                 sizeof(m->network),

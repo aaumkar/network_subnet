@@ -4,9 +4,9 @@ A network subnet helper for IPv4 addresses and subnets.
 
 Users should be able to enter their subnets masks using digit-by-digit inputs.
 ```
- ^  ^  ^   ^  ^  ^   ^  ^  ^   ^  ^  ^ 
-[0][0][0].[0][0][0].[0][0][0].[0][0][0]
- v  v  v   v  v  v   v  v  v   v  v  v  
+ ^  ^  ^   ^  ^  ^   ^  ^  ^   ^  ^  ^   ^  ^
+[0][0][0].[0][0][0].[0][0][0].[0][0][0]/[0][0]
+ v  v  v   v  v  v   v  v  v   v  v  v   v  v  
 ```
 
 After entering the subnet, the view should show the IP ranges

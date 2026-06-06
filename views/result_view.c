@@ -16,11 +16,12 @@ static void result_view_draw(Canvas* canvas, void* model) {
 
     canvas_set_font(canvas, FontSecondary);
 
-    char buf[26];
+    char buf[28];
+
     snprintf(buf, sizeof(buf), "Net: %s/%u", m->network, m->cidr);
     canvas_draw_str(canvas, 2, 24, buf);
 
-    snprintf(buf, sizeof(buf), "Cast: %s", m->broadcast);
+    snprintf(buf, sizeof(buf), "BroadCast: %s", m->broadcast);
     canvas_draw_str(canvas, 2, 34, buf);
 
     snprintf(buf, sizeof(buf), "Hosts: %lu", (unsigned long)m->host_count);

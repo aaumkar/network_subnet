@@ -5,9 +5,7 @@
 #include "network_subnet.h"
 #include "scenes/scenes.h"
 #include "views/result_view.h"
-#include "core/subnet_math.h"
-
-#define TAG "--NetworkSubnet--"
+#include "views/ip_input_view.h"
 
 static bool view_dispatcher_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);
@@ -34,6 +32,9 @@ NetworkSubnetApp* allocate_and_init() {
     app->submenu = submenu_alloc();
     FURI_LOG_I(TAG, "Submenu Allocated");
     app->result_view = result_view_alloc();
+    FURI_LOG_T(TAG, "Result view allocated");
+    app->ip_input_view = ip_input_view_alloc(app);
+    FURI_LOG_T(TAG, "IP input view");
 
     // register it with the dispatcher (also at app start)
     view_dispatcher_add_view(app->view_dispatcher, ViewIdResult, app->result_view);
@@ -52,7 +53,8 @@ NetworkSubnetApp* allocate_and_init() {
     FURI_LOG_I(TAG, "Registered nav callback");
     view_dispatcher_add_view(app->view_dispatcher, ViewIdMenu, submenu_get_view(app->submenu));
     FURI_LOG_I(TAG, "Adding view");
-
+    view_dispatcher_add_view(app->view_dispatcher, ViewIdIpInput, app->ip_input_view);
+    FURI_LOG_I(TAG, "Adding view ipInput");
     return app;
 }
 
@@ -60,6 +62,8 @@ void clean_and_free(NetworkSubnetApp* app) {
     // free
 
     FURI_LOG_I(TAG, "Starting Freeing the memory");
+    view_dispatcher_remove_view(app->view_dispatcher, ViewIdIpInput);
+    FURI_LOG_I(TAG, "ip input view removed");
     view_dispatcher_remove_view(app->view_dispatcher, ViewIdMenu);
     FURI_LOG_I(TAG, "menu view removed");
     view_dispatcher_remove_view(app->view_dispatcher, ViewIdResult);
@@ -68,6 +72,8 @@ void clean_and_free(NetworkSubnetApp* app) {
     FURI_LOG_I(TAG, "Submenu freed");
     result_view_free(app->result_view);
     FURI_LOG_I(TAG, "Result view freed");
+    result_view_free(app->ip_input_view);
+    FURI_LOG_I(TAG, "Ip input view freed");
     view_dispatcher_free(app->view_dispatcher);
     FURI_LOG_I(TAG, "vd freed");
     scene_manager_free(app->scene_manager);
@@ -83,17 +89,9 @@ int32_t network_subnet_app(void* p) {
     NetworkSubnetApp* app = allocate_and_init();
 
     // start
-    uint8_t ip[] = {172, 20, 20, 1};
-    uint8_t cidr = 23;
-    app->subnet_result.cidr = cidr;
-    subnet_calculate(
-        ip,
-        cidr,
-        &app->subnet_result.network_addr,
-        &app->subnet_result.broadcast_addr,
-        &app->subnet_result.host_count);
+    app->active_digit = 0;
     FURI_LOG_I(TAG, "Setting next scene");
-    scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneSubMenu);
+    scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneIpInput);
     FURI_LOG_I(TAG, "Starting VD");
     view_dispatcher_run(app->view_dispatcher);
     FURI_LOG_I(TAG, "VD ended");

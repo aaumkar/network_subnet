@@ -8,3 +8,4 @@ dist/*
 
 *.ignored.*
 **/.DS_Store
+**.out
