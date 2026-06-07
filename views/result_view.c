@@ -4,7 +4,6 @@
 #include <gui/elements.h>
 
 #include "result_view.h"
-#include "../network_subnet.h"
 
 // 1. The draw callback — called by the GUI thread, never by you
 static void result_view_draw(Canvas* canvas, void* model) {
@@ -18,19 +17,17 @@ static void result_view_draw(Canvas* canvas, void* model) {
 
     char buf[28];
 
-    snprintf(buf, sizeof(buf), "Nt: %s/%u", m->network, m->cidr);
-    canvas_draw_str(canvas, 2, 24, buf);
+    snprintf(buf, sizeof(buf), "%s/%u", m->network, m->cidr);
+    canvas_draw_str(canvas, 5, 24, buf);
 
-    snprintf(buf, sizeof(buf), "Cst: %s", m->broadcast);
+    snprintf(buf, sizeof(buf), "BC: %s", m->broadcast);
     canvas_draw_str(canvas, 2, 34, buf);
 
     snprintf(buf, sizeof(buf), "Hst: %lu", (unsigned long)m->host_count);
     canvas_draw_str(canvas, 2, 44, buf);
 
-    snprintf(buf, sizeof(buf), "Snet: %s", m->subnet_mask);
+    snprintf(buf, sizeof(buf), "Msk: %s", m->subnet_mask);
     canvas_draw_str(canvas, 2, 54, buf);
-
-    //elements_button_left(canvas, "Back");
 }
 
 // 2. The input callback — called by the GUI thread on key events

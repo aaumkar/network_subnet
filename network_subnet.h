@@ -1,4 +1,4 @@
-
+#pragma once
 #include <furi.h>
 #include <gui/gui.h>
 #include <gui/scene_manager.h>
@@ -38,7 +38,7 @@ typedef enum {
 } AppEvent;
 
 typedef enum {
-    FirstOctect = 3,
+    FirstOctet = 3,
     SecondOctet = 6,
     ThirdOctet = 9,
     CIDR = 12

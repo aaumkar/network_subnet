@@ -12,7 +12,7 @@ static void increment_active_digit(IpInputViewModel* m) {
     uint32_t temp_octet;
     uint8_t hundred = 100;
     uint8_t upper_lim;
-    if(m->octects_and_cidr_digits[m->active_digit] == 9) {
+    if(m->octets_and_cidr_digits[m->active_digit] == 9) {
         return;
     }
     if(m->active_digit < 12) {
@@ -30,28 +30,28 @@ static void increment_active_digit(IpInputViewModel* m) {
         FURI_LOG_D(TAG, "running octet from %d to %d", upper_lim - 3, upper_lim);
         for(int i = upper_lim - 3; i < upper_lim; i++) {
             if(i == m->active_digit) {
-                temp_octet = temp_octet + (m->octects_and_cidr_digits[i] + 1) * hundred;
+                temp_octet = temp_octet + (m->octets_and_cidr_digits[i] + 1) * hundred;
             } else {
-                temp_octet = temp_octet + m->octects_and_cidr_digits[i] * hundred;
+                temp_octet = temp_octet + m->octets_and_cidr_digits[i] * hundred;
             }
             hundred = hundred / 10;
         }
         FURI_LOG_D(TAG, "octect value %ld", temp_octet);
         if(temp_octet < 256) {
-            m->octects_and_cidr_digits[m->active_digit] += 1;
+            m->octets_and_cidr_digits[m->active_digit] += 1;
         }
 
     } else {
-        temp_octet = m->octects_and_cidr_digits[12] * 10 + m->octects_and_cidr_digits[13];
+        temp_octet = m->octets_and_cidr_digits[12] * 10 + m->octets_and_cidr_digits[13];
         switch(m->active_digit) {
         case 12:
             if(temp_octet + 10 < 33) {
-                m->octects_and_cidr_digits[m->active_digit] += 1;
+                m->octets_and_cidr_digits[m->active_digit] += 1;
             }
             break;
         case 13:
-            if(temp_octet + 1 < 33 && m->octects_and_cidr_digits[m->active_digit] < 9) {
-                m->octects_and_cidr_digits[m->active_digit] += 1;
+            if(temp_octet + 1 < 33 && m->octets_and_cidr_digits[m->active_digit] < 9) {
+                m->octets_and_cidr_digits[m->active_digit] += 1;
             }
             break;
         }
@@ -59,8 +59,8 @@ static void increment_active_digit(IpInputViewModel* m) {
 }
 
 static void decrement_active_digit(IpInputViewModel* m) {
-    if(m->octects_and_cidr_digits[m->active_digit] != 0) {
-        m->octects_and_cidr_digits[m->active_digit] -= 1;
+    if(m->octets_and_cidr_digits[m->active_digit] != 0) {
+        m->octets_and_cidr_digits[m->active_digit] -= 1;
     }
 }
 
@@ -81,7 +81,7 @@ static void ip_input_view_draw(Canvas* canvas, void* model) {
     bool proc_active_digit = false;
     for(int i = 0; i < 14; i++) {
         switch(i) {
-        case FirstOctect:
+        case FirstOctet:
         case SecondOctet:
         case ThirdOctet:
         case CIDR:
@@ -93,7 +93,7 @@ static void ip_input_view_draw(Canvas* canvas, void* model) {
             canvas_draw_box(canvas, 1 + (inc)*CHAR_WIDTH, 22, 7, 10);
             canvas_invert_color(canvas);
         }
-        snprintf(buf, sizeof(buf), "%d", m->octects_and_cidr_digits[i]);
+        snprintf(buf, sizeof(buf), "%d", m->octets_and_cidr_digits[i]);
         canvas_draw_str(canvas, 2 + (inc)*CHAR_WIDTH, 30, buf);
         inc += 1;
         if(proc_active_digit) {
@@ -119,7 +119,7 @@ static bool ip_input_view_input(InputEvent* event, void* context) {
         app->ip_input_view,
         IpInputViewModel * m,
         {
-            if(event->type == InputTypeRelease) {
+            if(event->type == InputTypeShort || event->type == InputTypeRepeat) {
                 switch(event->key) {
                 case InputKeyUp:
                     increment_active_digit(m);
@@ -153,7 +153,7 @@ static bool ip_input_view_input(InputEvent* event, void* context) {
             } else if(event->type == InputTypeLong) {
                 switch(event->key) {
                 case InputKeyDown:
-                    m->octects_and_cidr_digits[m->active_digit] = 0;
+                    m->octets_and_cidr_digits[m->active_digit] = 0;
                     break;
                 default:
                     consumed = false;

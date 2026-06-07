@@ -62,10 +62,10 @@ static void mask_input_view_draw(Canvas* canvas, void* model) {
     bool proc_active_digit = false;
     for(int i = 0; i < 12; i++) {
         switch(i) {
-        case FirstOctect:
+        case FirstOctet:
         case SecondOctet:
         case ThirdOctet:
-            canvas_draw_str(canvas, 2 + (inc)*CHAR_WIDTH, 30, i == CIDR ? "/" : ".");
+            canvas_draw_str(canvas, 2 + (inc)*CHAR_WIDTH, 30, ".");
             inc += 1;
         }
         proc_active_digit = i == m->active_digit;
@@ -98,7 +98,7 @@ static bool mask_input_view_input(InputEvent* event, void* context) {
         app->mask_input_view,
         MaskInputViewModel * m,
         {
-            if(event->type == InputTypeRelease) {
+            if(event->type == InputTypeShort || event->type == InputTypeRepeat) {
                 switch(event->key) {
                 case InputKeyUp:
                     increment_active_digit(m);

@@ -19,7 +19,7 @@ static inline uint32_t ip_to_u32(const uint8_t ip[4]) {
  * @param val uint32 value of IP
  * @param ip 
  */
-static inline void u32_to_ip(uint32_t val, uint32_t ip[4]) {
+static inline void u32_to_ip(uint32_t val, uint8_t ip[4]) {
     ip[0] = val >> 24 & 0xFF;
     ip[1] = val >> 16 & 0xFF;
     ip[2] = val >> 8 & 0xFF;
@@ -32,7 +32,7 @@ static inline void u32_to_ip(uint32_t val, uint32_t ip[4]) {
  * @param cidr 
  * @return uint32_t 
  */
-static inline uint32_t cidr_to_mask(short cidr) {
+static inline uint32_t cidr_to_mask(uint8_t cidr) {
     if(cidr == 0) return 0;
     return ~((uint32_t)0) << (32 - cidr);
 }

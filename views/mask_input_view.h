@@ -4,7 +4,7 @@
 #include <gui/view.h>
 
 typedef struct {
-    char octect_digits[12]; // each digit in ip/cidr format
+    uint8_t octect_digits[12]; // each digit in ip/cidr format
     uint8_t active_digit; // 0 ... 14 (12 of ip + 2 of CIDR)
 } MaskInputViewModel;
 

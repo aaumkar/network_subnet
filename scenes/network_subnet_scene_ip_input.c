@@ -16,18 +16,18 @@ void network_subnet_scene_ip_input_on_enter(void* context) {
             uint8_t octet_counter = 0;
             uint8_t hundred = 100;
             for(short i = 0; i < 12; i++) {
+                m->octets_and_cidr_digits[i] = (short)(app->ip[octet_counter] / hundred) % 10;
+                three_counter += 1;
+                hundred = hundred / 10;
                 if(three_counter == 3) {
                     octet_counter += 1;
                     hundred = 100;
                     three_counter = 0;
                 }
-                m->octects_and_cidr_digits[i] = (short)(app->ip[octet_counter] / hundred) % 10;
-                three_counter += 1;
-                hundred = hundred / 10;
             }
-
-            m->octects_and_cidr_digits[12] = (int)app->cidr / 10;
-            m->octects_and_cidr_digits[13] = (int)app->cidr % 10;
+            FURI_LOG_D(TAG, "received cidr %d", app->cidr);
+            m->octets_and_cidr_digits[12] = (int)app->cidr / 10;
+            m->octets_and_cidr_digits[13] = (int)app->cidr % 10;
             m->active_digit = 0;
         },
         true);
@@ -51,22 +51,22 @@ bool network_subnet_scene_ip_input_on_event(void* context, SceneManagerEvent eve
                     uint8_t octet_counter = 0;
                     uint8_t temp_octet = 0;
                     uint8_t hundred = 100;
-                    for(int i = 0; i < 13; i++) {
+                    for(int i = 0; i < 14; i++) {
+                        temp_octet = temp_octet + m->octets_and_cidr_digits[i] * hundred;
+                        hundred = hundred / 10;
+                        three_counter += 1;
                         if(three_counter == 3) {
                             hundred = 100;
                             app->ip[octet_counter] = temp_octet;
                             three_counter = 0;
                             FURI_LOG_D(
-                                TAG, "calculated octect %d to be %d", octet_counter, temp_octet);
+                                TAG, "calculated octet %d to be %d", octet_counter, temp_octet);
                             octet_counter += 1;
                             temp_octet = 0;
                         }
-                        temp_octet = temp_octet + m->octects_and_cidr_digits[i] * hundred;
-                        hundred = hundred / 10;
-                        three_counter += 1;
                     }
-                    app->cidr =
-                        m->octects_and_cidr_digits[12] * 10 + m->octects_and_cidr_digits[13];
+                    app->cidr = m->octets_and_cidr_digits[12] * 10 + m->octets_and_cidr_digits[13];
+                    u32_to_ip(cidr_to_mask(app->cidr), app->subnet_mask);
                     FURI_LOG_D(TAG, "calculated cidr %d", app->cidr);
                 },
                 false);

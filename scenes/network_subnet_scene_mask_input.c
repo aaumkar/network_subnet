@@ -46,21 +46,21 @@ bool network_subnet_scene_mask_input_on_event(void* context, SceneManagerEvent e
                     uint8_t temp_octet = 0;
                     uint8_t hundred = 100;
                     for(int i = 0; i < 12; i++) {
+                        temp_octet = temp_octet + m->octect_digits[i] * hundred;
+                        hundred = hundred / 10;
+                        three_counter += 1;
                         if(three_counter == 3) {
                             hundred = 100;
                             app->subnet_mask[octet_counter] = temp_octet;
                             three_counter = 0;
                             FURI_LOG_D(
-                                TAG, "calculated octect %d to be %d", octet_counter, temp_octet);
+                                TAG, "calculated subnet %d to be %d", octet_counter, temp_octet);
                             octet_counter += 1;
                             temp_octet = 0;
                         }
-                        temp_octet = temp_octet + m->octect_digits[i] * hundred;
-                        hundred = hundred / 10;
-                        three_counter += 1;
                     }
                 },
-                false);
+                true);
             scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneIpInput);
             consumed = true;
             break;
