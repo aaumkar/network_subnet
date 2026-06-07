@@ -5,7 +5,7 @@
 
 typedef struct {
     uint8_t octect_digits[12]; // each digit in ip/cidr format
-    uint8_t active_digit; // 0 ... 14 (12 of ip + 2 of CIDR)
+    uint8_t active_digit; // 0 ... 11 (12 of mask)
 } MaskInputViewModel;
 
 View* mask_input_view_alloc(void* context);

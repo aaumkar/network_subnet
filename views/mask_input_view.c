@@ -45,7 +45,6 @@ static void decrement_active_digit(MaskInputViewModel* m) {
     }
 }
 
-// 1. The draw callback — called by the GUI thread, never by you
 static void mask_input_view_draw(Canvas* canvas, void* model) {
     MaskInputViewModel* m = (MaskInputViewModel*)model;
     canvas_clear(canvas);
@@ -90,7 +89,6 @@ static void mask_input_view_draw(Canvas* canvas, void* model) {
     elements_button_center(canvas, "Next");
 }
 
-// 2. The input callback — called by the GUI thread on key events
 static bool mask_input_view_input(InputEvent* event, void* context) {
     bool consumed = false;
     NetworkSubnetApp* app = context;

@@ -12,7 +12,7 @@ typedef struct {
     uint32_t network_addr; // first address  (host bits zeroed)
     uint32_t broadcast_addr; // last address
     uint32_t host_count; // usable hosts
-    uint8_t cidr; // prefix length
+    uint8_t cidr;
     uint32_t subnet_mask_number;
 } SubnetResult;
 

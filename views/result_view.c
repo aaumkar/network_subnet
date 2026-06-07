@@ -5,7 +5,6 @@
 
 #include "result_view.h"
 
-// 1. The draw callback — called by the GUI thread, never by you
 static void result_view_draw(Canvas* canvas, void* model) {
     ResultViewModel* m = (ResultViewModel*)model;
 
@@ -30,14 +29,12 @@ static void result_view_draw(Canvas* canvas, void* model) {
     canvas_draw_str(canvas, 2, 54, buf);
 }
 
-// 2. The input callback — called by the GUI thread on key events
 static bool result_view_input(InputEvent* event, void* context) {
     UNUSED(event);
     UNUSED(context);
     return false; // let BACK propagate to the nav callback
 }
 
-// 3. Alloc — called once at app startup, wires everything together
 View* result_view_alloc(void) {
     View* view = view_alloc();
 
