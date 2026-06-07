@@ -6,6 +6,7 @@
 #include "scenes/scenes.h"
 #include "views/result_view.h"
 #include "views/ip_input_view.h"
+#include "views/mask_input_view.h"
 
 static bool view_dispatcher_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);
@@ -24,6 +25,17 @@ NetworkSubnetApp* allocate_and_init() {
     FURI_LOG_I(TAG, "App started");
     FURI_LOG_I(TAG, "Allocating now");
     NetworkSubnetApp* app = malloc(sizeof(NetworkSubnetApp));
+
+    app->cidr = 24;
+    app->ip[0] = 192;
+    app->ip[1] = 168;
+    app->ip[2] = 1;
+    app->ip[3] = 1;
+    app->subnet_mask[0] = 255;
+    app->subnet_mask[1] = 255;
+    app->subnet_mask[2] = 255;
+    app->subnet_mask[3] = 0;
+
     FURI_LOG_I(TAG, "App allocated");
     app->scene_manager = scene_manager_alloc(&network_subnet_scene_handlers, app);
     FURI_LOG_I(TAG, "Scene Manager Allocated");
@@ -35,9 +47,10 @@ NetworkSubnetApp* allocate_and_init() {
     FURI_LOG_T(TAG, "Result view allocated");
     app->ip_input_view = ip_input_view_alloc(app);
     FURI_LOG_T(TAG, "IP input view");
+    app->mask_input_view = mask_input_view_alloc(app);
+    FURI_LOG_T(TAG, "IP input view");
 
     // register it with the dispatcher (also at app start)
-    view_dispatcher_add_view(app->view_dispatcher, ViewIdResult, app->result_view);
 
     // prepare
     Gui* gui = furi_record_open(RECORD_GUI);
@@ -55,6 +68,8 @@ NetworkSubnetApp* allocate_and_init() {
     FURI_LOG_I(TAG, "Adding view");
     view_dispatcher_add_view(app->view_dispatcher, ViewIdIpInput, app->ip_input_view);
     FURI_LOG_I(TAG, "Adding view ipInput");
+    view_dispatcher_add_view(app->view_dispatcher, ViewIdResult, app->result_view);
+    view_dispatcher_add_view(app->view_dispatcher, ViewIdMaskInput, app->mask_input_view);
     return app;
 }
 
@@ -62,6 +77,8 @@ void clean_and_free(NetworkSubnetApp* app) {
     // free
 
     FURI_LOG_I(TAG, "Starting Freeing the memory");
+    view_dispatcher_remove_view(app->view_dispatcher, ViewIdMaskInput);
+    FURI_LOG_I(TAG, "mask input view removed");
     view_dispatcher_remove_view(app->view_dispatcher, ViewIdIpInput);
     FURI_LOG_I(TAG, "ip input view removed");
     view_dispatcher_remove_view(app->view_dispatcher, ViewIdMenu);
@@ -89,9 +106,8 @@ int32_t network_subnet_app(void* p) {
     NetworkSubnetApp* app = allocate_and_init();
 
     // start
-    app->active_digit = 0;
     FURI_LOG_I(TAG, "Setting next scene");
-    scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneIpInput);
+    scene_manager_next_scene(app->scene_manager, NetworkSubnetSceneSubMenu);
     FURI_LOG_I(TAG, "Starting VD");
     view_dispatcher_run(app->view_dispatcher);
     FURI_LOG_I(TAG, "VD ended");

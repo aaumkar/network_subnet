@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <furi.h>
+// #include <furi.h>
 
 /**
  * @brief get uint32 version of the IP address 
@@ -38,6 +38,14 @@ static inline uint32_t cidr_to_mask(short cidr) {
 }
 
 /**
+ * @brief convert mask to cidr
+ * 
+ * @param cidr 
+ * @return uint32_t 
+ */
+uint8_t count_number_of_continuous_ones(uint32_t subnet_number);
+
+/**
  * @brief get subnet detials from IP and CIDR.
  * This function will also calculate edge case of the /31, /32 subnets
  * 
@@ -53,23 +61,4 @@ void subnet_calculate(
     uint32_t* out_network, // network address
     uint32_t* out_broadcast, // broadcast address
     uint32_t* out_host_count // usable hosts (broadcast - network - 1)
-) {
-    uint32_t mask = cidr_to_mask(cidr);
-    uint32_t ip_number = ip_to_u32(ip);
-    *out_network = mask & ip_number;
-    FURI_LOG_D("subnet_calc", "recieved ip %d.%d.%d.%d/%d", ip[0], ip[1], ip[2], ip[3], cidr);
-    switch(cidr) {
-    case 31:
-        *out_broadcast = *out_network + 1;
-        *out_host_count = 2;
-        break;
-    case 32:
-        *out_broadcast = *out_network;
-        *out_host_count = 0;
-        break;
-    default:
-        *out_broadcast = ip_number | (~mask);
-        *out_host_count = *out_host_count - 1;
-    }
-    *out_host_count = *out_broadcast - ip_number;
-}
+);

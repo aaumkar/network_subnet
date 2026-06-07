@@ -25,7 +25,7 @@ typedef enum {
     ViewIdMenu,
     ViewIdIpInput,
     ViewIdResult,
-    // ViewIdMaskList,
+    ViewIdMaskInput,
 } ViewId;
 
 // Custom events — fired from views upward to scenes
@@ -33,8 +33,15 @@ typedef enum {
     EventMenuIpSelected,
     EventMenuMaskSelected,
     EventIpConfirmed,
-    // EventBackFromResult,
+    EventMaskConfirmed,
 } AppEvent;
+
+typedef enum {
+    FirstOctect = 3,
+    SecondOctet = 6,
+    ThirdOctet = 9,
+    CIDR = 12
+} IpNotationIndexes;
 
 typedef struct {
     SceneManager* scene_manager;
@@ -43,10 +50,10 @@ typedef struct {
     Submenu* submenu;
     View* result_view;
     View* ip_input_view;
-    // View* mask_list;
+    View* mask_input_view;
 
     uint8_t ip[4];
+    uint8_t subnet_mask[4];
     uint8_t cidr;
-    uint8_t active_digit;
     SubnetResult subnet_result;
 } NetworkSubnetApp;
