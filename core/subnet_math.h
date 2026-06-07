@@ -60,5 +60,5 @@ void subnet_calculate(
     uint8_t cidr,
     uint32_t* out_network, // network address
     uint32_t* out_broadcast, // broadcast address
-    uint32_t* out_host_count // usable hosts (broadcast - network - 1)
-);
+    uint32_t* out_host_count, // usable hosts (broadcast - network - 1)
+    uint32_t* out_subnet_mask);

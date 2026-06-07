@@ -36,10 +36,11 @@ void subnet_calculate(
     uint8_t cidr,
     uint32_t* out_network, // network address
     uint32_t* out_broadcast, // broadcast address
-    uint32_t* out_host_count // usable hosts (broadcast - network - 1)
-) {
+    uint32_t* out_host_count, // usable hosts (broadcast - network - 1)
+    uint32_t* out_subnet_mask) {
     uint32_t mask = cidr_to_mask(cidr);
     uint32_t ip_number = ip_to_u32(ip);
+    *out_subnet_mask = mask;
     *out_network = mask & ip_number;
     switch(cidr) {
     case 31:

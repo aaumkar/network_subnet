@@ -13,6 +13,7 @@ typedef struct {
     uint32_t broadcast_addr; // last address
     uint32_t host_count; // usable hosts
     uint8_t cidr; // prefix length
+    uint32_t subnet_mask_number;
 } SubnetResult;
 
 typedef enum {

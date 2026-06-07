@@ -14,18 +14,21 @@ static void result_view_draw(Canvas* canvas, void* model) {
     canvas_set_font(canvas, FontPrimary);
     canvas_draw_str(canvas, 2, 10, "Network Info");
 
-    canvas_set_font(canvas, FontSecondary);
+    canvas_set_font(canvas, FontKeyboard);
 
     char buf[28];
 
-    snprintf(buf, sizeof(buf), "Net: %s/%u", m->network, m->cidr);
+    snprintf(buf, sizeof(buf), "Nt: %s/%u", m->network, m->cidr);
     canvas_draw_str(canvas, 2, 24, buf);
 
-    snprintf(buf, sizeof(buf), "BroadCast: %s", m->broadcast);
+    snprintf(buf, sizeof(buf), "Cst: %s", m->broadcast);
     canvas_draw_str(canvas, 2, 34, buf);
 
-    snprintf(buf, sizeof(buf), "Hosts: %lu", (unsigned long)m->host_count);
+    snprintf(buf, sizeof(buf), "Hst: %lu", (unsigned long)m->host_count);
     canvas_draw_str(canvas, 2, 44, buf);
+
+    snprintf(buf, sizeof(buf), "Snet: %s", m->subnet_mask);
+    canvas_draw_str(canvas, 2, 54, buf);
 
     //elements_button_left(canvas, "Back");
 }

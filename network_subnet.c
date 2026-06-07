@@ -50,8 +50,6 @@ NetworkSubnetApp* allocate_and_init() {
     app->mask_input_view = mask_input_view_alloc(app);
     FURI_LOG_T(TAG, "IP input view");
 
-    // register it with the dispatcher (also at app start)
-
     // prepare
     Gui* gui = furi_record_open(RECORD_GUI);
     FURI_LOG_I(TAG, "GUI Record Opened");
@@ -67,9 +65,11 @@ NetworkSubnetApp* allocate_and_init() {
     view_dispatcher_add_view(app->view_dispatcher, ViewIdMenu, submenu_get_view(app->submenu));
     FURI_LOG_I(TAG, "Adding view");
     view_dispatcher_add_view(app->view_dispatcher, ViewIdIpInput, app->ip_input_view);
-    FURI_LOG_I(TAG, "Adding view ipInput");
+    FURI_LOG_I(TAG, "Adding view ip input view");
     view_dispatcher_add_view(app->view_dispatcher, ViewIdResult, app->result_view);
+    FURI_LOG_I(TAG, "Adding view result view");
     view_dispatcher_add_view(app->view_dispatcher, ViewIdMaskInput, app->mask_input_view);
+    FURI_LOG_I(TAG, "Adding mask input view");
     return app;
 }
 
