@@ -5,11 +5,11 @@ void network_subnet_submenu_set_callback(void* context, uint32_t index) {
     furi_assert(context);
     NetworkSubnetApp* app = context;
     switch(index) {
-    case InputModeMask:
-        view_dispatcher_send_custom_event(app->view_dispatcher, EventMenuMaskSelected);
-        break;
     case InputModeIpSubnet:
         view_dispatcher_send_custom_event(app->view_dispatcher, EventMenuIpSelected);
+        break;
+    case InputModeMask:
+        view_dispatcher_send_custom_event(app->view_dispatcher, EventMenuMaskSelected);
         break;
     }
 }
@@ -19,13 +19,13 @@ void network_subnet_scene_menu_on_enter(void* context) {
     NetworkSubnetApp* app = context;
     submenu_reset(app->submenu);
     submenu_add_item(
+        app->submenu, "IP / CIDR", InputModeIpSubnet, network_subnet_submenu_set_callback, app);
+    submenu_add_item(
         app->submenu,
         "Subnet Mask -> IP / CIDR",
         InputModeMask,
         network_subnet_submenu_set_callback,
         app);
-    submenu_add_item(
-        app->submenu, "IP / CIDR", InputModeIpSubnet, network_subnet_submenu_set_callback, app);
     view_dispatcher_switch_to_view(app->view_dispatcher, ViewIdMenu);
 }
 
